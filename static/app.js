@@ -148,18 +148,16 @@ function filterDoctors() {
 
 async function loadPatients() {
   state.patients = await api("/patients");
-  ["patient-select", "my-patient"].forEach((id) => {
-    const sel = $(id);
-    const prev = sel.value;
-    sel.innerHTML = '<option value="">Select a patient</option>';
-    state.patients.forEach((pat) => {
-      const opt = document.createElement("option");
-      opt.value = pat.id;
-      opt.textContent = `${pat.patient_name} \u00b7 ${pat.email}`;
-      sel.appendChild(opt);
-    });
-    if (prev) sel.value = prev;
+  const sel = $("my-patient");
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Select a patient</option>';
+  state.patients.forEach((pat) => {
+    const opt = document.createElement("option");
+    opt.value = pat.id;
+    opt.textContent = `${pat.patient_name} \u00b7 ${pat.email}`;
+    sel.appendChild(opt);
   });
+  if (prev) sel.value = prev;
 }
 /* ---------- Slots (booking) ---------- */
 
@@ -213,29 +211,18 @@ function clearSlots() {
   $("slots-wrap").classList.add("hidden");
 }
 
-/* ---------- New patient ---------- */
+/* ---------- Patient (find-or-create by email) ---------- */
 
-async function createPatient() {
-  const name = $("np-name").value.trim();
-  const phone = $("np-phone").value.trim();
-  const email = $("np-email").value.trim();
-  if (!name || !phone || !email) {
-    toast("Please fill in name, phone and email.", "error");
-    return;
-  }
-  try {
-    const created = await api("/patients", {
-      method: "POST",
-      body: JSON.stringify({ patient_name: name, phone_number: phone, email }),
-    });
-    await loadPatients();
-    $("patient-select").value = created.id;
-    $("new-patient").classList.add("hidden");
-    $("np-name").value = $("np-phone").value = $("np-email").value = "";
-    toast(`Registered ${created.patient_name}.`);
-  } catch (err) {
-    toast(err.message, "error");
-  }
+async function findOrCreatePatient(name, phone, email) {
+  const match = state.patients.find(
+    (p) => p.email.toLowerCase() === email.toLowerCase()
+  );
+  if (match) return match.id;
+  const created = await api("/patients", {
+    method: "POST",
+    body: JSON.stringify({ patient_name: name, phone_number: phone, email }),
+  });
+  return created.id;
 }
 
 /* ---------- Booking submit ---------- */
@@ -243,14 +230,19 @@ async function createPatient() {
 async function submitBooking(event) {
   event.preventDefault();
   const doctorId = Number($("doctor-select").value);
-  const patientId = Number($("patient-select").value);
   const date = $("date-input").value;
   if (!doctorId) return toast("Select a doctor.", "error");
-  if (!patientId) return toast("Select a patient.", "error");
   if (!state.selectedSlot) return toast("Select a time slot.", "error");
+  const name = $("np-name").value.trim();
+  const phone = $("np-phone").value.trim();
+  const email = $("np-email").value.trim();
+  if (!name || !phone || !email) {
+    return toast("Please fill in your name, phone and email.", "error");
+  }
   const start_time = `${date}T${fmtTime(state.selectedSlot)}:00`;
   const notes = $("notes-input").value.trim() || null;
   try {
+    const patientId = await findOrCreatePatient(name, phone, email);
     await api("/appointments", {
       method: "POST",
       body: JSON.stringify({
@@ -260,10 +252,12 @@ async function submitBooking(event) {
         notes,
       }),
     });
+    await loadPatients();
     toast("Appointment booked successfully.");
     state.selectedSlot = null;
     $("slots").querySelectorAll(".chip.selected").forEach((x) => x.classList.remove("selected"));
     $("notes-input").value = "";
+    $("np-name").value = $("np-phone").value = $("np-email").value = "";
   } catch (err) {
     toast(err.message, "error");
   }
@@ -441,10 +435,6 @@ function initDate() {
     clearSlots();
   });
   $("load-slots").addEventListener("click", loadSlots);
-  $("toggle-new-patient").addEventListener("click", () => {
-    $("new-patient").classList.toggle("hidden");
-  });
-  $("create-patient").addEventListener("click", createPatient);
   $("booking-form").addEventListener("submit", submitBooking);
   $("load-appointments").addEventListener("click", loadAppointments);
   $("modal-close").addEventListener("click", closeModal);

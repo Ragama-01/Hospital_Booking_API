@@ -54,34 +54,19 @@
             <div id="slots" class="slots"></div>
           </div>
 
-          <div class="grid">
+          <div class="grid three">
             <div class="field">
-              <label for="patient-select">Patient</label>
-              <select id="patient-select" required>
-                <option value="">Select a patient</option>
-              </select>
+              <label for="np-name">Your name</label>
+              <input id="np-name" type="text" placeholder="e.g. Jane Doe" autocomplete="off" required />
             </div>
-            <div class="field align-end">
-              <button type="button" id="toggle-new-patient" class="btn btn-ghost">＋ New patient</button>
+            <div class="field">
+              <label for="np-phone">Phone</label>
+              <input id="np-phone" type="text" placeholder="+254700000000" autocomplete="off" required />
             </div>
-          </div>
-
-          <div id="new-patient" class="new-patient hidden">
-            <div class="grid three">
-              <div class="field">
-                <label for="np-name">Patient name</label>
-                <input id="np-name" type="text" placeholder="e.g. Jane Doe" autocomplete="off" />
-              </div>
-              <div class="field">
-                <label for="np-phone">Phone</label>
-                <input id="np-phone" type="text" placeholder="+254700000000" autocomplete="off" />
-              </div>
-              <div class="field">
-                <label for="np-email">Email</label>
-                <input id="np-email" type="email" placeholder="jane@example.com" autocomplete="off" />
-              </div>
+            <div class="field">
+              <label for="np-email">Email</label>
+              <input id="np-email" type="email" placeholder="jane@example.com" autocomplete="off" required />
             </div>
-            <button type="button" id="create-patient" class="btn btn-secondary">Register patient</button>
           </div>
 
           <div class="field">
