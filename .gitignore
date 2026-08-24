@@ -1,0 +1,17 @@
+# Runtime
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Local databases
+*.db
+*.sqlite3
+
+# Test artifacts
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
