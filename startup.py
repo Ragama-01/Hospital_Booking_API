@@ -5,7 +5,7 @@ serving, so the Postgres schema + seed data are guaranteed to exist.
 """
 import models  # noqa: F401  (import registers models on Base.metadata)
 from database import Base, SessionLocal, engine
-from seed import seed
+from seed import seed, seed_patients
 
 
 def main() -> None:
@@ -14,6 +14,8 @@ def main() -> None:
 
     print("Seeding doctors (no-op if already seeded)...")
     seed()
+    print("Seeding patients (no-op if already seeded)...")
+    seed_patients()
     print("Startup complete.")
 
 

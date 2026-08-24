@@ -1,6 +1,6 @@
 """
-Seeds 5 doctors with working hours and a 1-hour break each.
-Run after init_db.py:
+Seeds 5 doctors with working hours and a 1-hour break each, plus a handful
+of dummy patients. Run after init_db.py:
 
     python seed.py
 """
@@ -76,5 +76,48 @@ def seed():
         db.close()
 
 
+def seed_patients():
+    """Seed a few dummy patients (idempotent — skips if any already exist)."""
+    db = SessionLocal()
+    try:
+        if db.query(models.Patient).count() > 0:
+            print("Patients already seeded — skipping.")
+            return
+
+        patients = [
+            models.Patient(
+                patient_name="Jane Doe",
+                phone_number="+254711111111",
+                email="jane.doe@example.com",
+            ),
+            models.Patient(
+                patient_name="John Mwangi",
+                phone_number="+254722222222",
+                email="john.mwangi@example.com",
+            ),
+            models.Patient(
+                patient_name="Alice Njeri",
+                phone_number="+254733333333",
+                email="alice.njeri@example.com",
+            ),
+            models.Patient(
+                patient_name="Peter Kamau",
+                phone_number="+254744444444",
+                email="peter.kamau@example.com",
+            ),
+            models.Patient(
+                patient_name="Grace Atieno",
+                phone_number="+254755555555",
+                email="grace.atieno@example.com",
+            ),
+        ]
+        db.add_all(patients)
+        db.commit()
+        print(f"Seeded {len(patients)} patients.")
+    finally:
+        db.close()
+
+
 if __name__ == "__main__":
     seed()
+    seed_patients()

@@ -67,10 +67,7 @@ class Appointment(Base):
     patient = relationship("Patient", back_populates="appointments")
 
     __table_args__ = (
-        # Prevents two BOOKED appointments for the same doctor at the same
-        # start_time. This is a partial index — cancelled rows are excluded,
-        # so a freed slot becomes rebookable, and rescheduling works by
-        # updating start_time on the same row (no separate slot table needed).
+       
         Index(
             "uq_doctor_slot_when_booked",
             "doctor_id",

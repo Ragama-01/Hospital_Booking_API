@@ -20,7 +20,6 @@ def generate_slots_for_doctor(db: Session, doctor: Doctor, target_date: date) ->
     break_start = datetime.combine(target_date, doctor.break_start)
     break_end = datetime.combine(target_date, doctor.break_end)
 
-    # Existing booked appointments for this doctor on this date.
     day_floor = datetime.combine(target_date, time.min)
     day_ceiling = datetime.combine(target_date, time.max)
     booked_times = {
