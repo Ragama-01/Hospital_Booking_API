@@ -8,10 +8,27 @@ A REST API for a clinic appointment booking system, built with **FastAPI**,
 | Method | Endpoint                              | Description |
 | ------ | ------------------------------------- | ----------- |
 | POST   | `/appointments`                       | Book a 30-min slot (validated against working hours, break, past time and double-booking). |
+| GET    | `/doctors`                            | List all doctors. |
 | GET    | `/doctors/{id}/availability?date=...` | All free 30-min slots for a doctor on a date. |
+| GET    | `/patients`                           | List all patients. |
+| POST   | `/patients`                           | Register a new patient. |
 | PATCH  | `/appointments/{id}/cancel`           | Cancel with a reason; slot becomes bookable again. |
 | PATCH  | `/appointments/{id}/reschedule`       | Move to a new slot; original slot is freed. |
 | GET    | `/patients/{id}/appointments`         | (Bonus) Upcoming appointments sorted by start date. |
+
+## Web UI
+
+A self-contained web interface (no build step, plain HTML/CSS/JS) lives in
+**`static/`** and is served by FastAPI itself:
+
+1. **Book Appointment** – pick a doctor and date to see its free 30-min slots,
+   then pick/create a patient and book.
+2. **My Appointments** – pick a patient to list upcoming appointments, then
+   **cancel** (with a reason) or **reschedule**.
+
+Because the app mounts `static/` at `/`, visiting the server root shows the UI
+(e.g. http://localhost:8000/), the API lives under `/docs`, the JSON health
+check moved to `/health`, and CORS is enabled for local development.
 
 ## Business rules
 
@@ -35,7 +52,8 @@ schemas.py          Pydantic request/response models
 services.py         trading rules + booking operations (the core logic)
 availability.py     30-min slot generation
 routers/            FastAPI routers: doctors, appointments, patients
-main.py             FastAPI app + router registration
+main.py             FastAPI app + router registration + static UI mount
+static/             Web UI (index.html, styles.css, app.js; served at /)
 seed.py             seeds 5 doctors
 startup.py          idempotent boot: create tables + seed (used on Railway)
 Init db.py          create tables only (python "Init db.py")

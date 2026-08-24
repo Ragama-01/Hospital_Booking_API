@@ -29,11 +29,17 @@
       <div class="panel">
         <h2>Book a new appointment</h2>
         <form id="booking-form" novalidate>
-          <div class="grid">
+          <div class="grid three">
+            <div class="field">
+              <label for="speciality-select">Speciality</label>
+              <select id="speciality-select" required>
+                <option value="">Loading specialities…</option>
+              </select>
+            </div>
             <div class="field">
               <label for="doctor-select">Doctor</label>
-              <select id="doctor-select" required>
-                <option value="">Loading doctors…</option>
+              <select id="doctor-select" required disabled>
+                <option value="">Select a speciality first</option>
               </select>
             </div>
             <div class="field">
