@@ -40,3 +40,32 @@ class PatientAppointmentsResponse(BaseModel):
     patient_id: int
     patient_name: str
     appointments: list[AppointmentResponse]
+
+
+class DoctorResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    full_name: str
+    speciality: str
+    phone_number: str
+    email: str
+    working_hours_start: time
+    working_hours_end: time
+    break_start: time
+    break_end: time
+
+
+class PatientCreate(BaseModel):
+    patient_name: str = Field(..., min_length=1)
+    phone_number: str = Field(..., min_length=1)
+    email: str = Field(..., min_length=1)
+
+
+class PatientResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    patient_name: str
+    phone_number: str
+    email: str

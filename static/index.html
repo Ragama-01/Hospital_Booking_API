@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clinic Booking System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">&#10010;</span>
+      <div class="brand-text">
+        <h1>Clinic Booking</h1>
+        <p>Hospital appointment system</p>
+      </div>
+    </div>
+    <nav class="tabs" aria-label="Main views">
+      <button class="tab active" data-view="book" type="button">Book Appointment</button>
+      <button class="tab" data-view="appointments" type="button">My Appointments</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- ================= Book view ================= -->
+    <section id="view-book" class="view">
+      <div class="panel">
+        <h2>Book a new appointment</h2>
+        <form id="booking-form" novalidate>
+          <div class="grid">
+            <div class="field">
+              <label for="doctor-select">Doctor</label>
+              <select id="doctor-select" required>
+                <option value="">Loading doctors…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="date-input">Date</label>
+              <input type="date" id="date-input" required />
+            </div>
+          </div>
+          <button type="button" id="load-slots" class="btn btn-secondary">Show available slots</button>
+
+          <div id="slots-wrap" class="slots-wrap hidden">
+            <p class="muted" id="slots-info"></p>
+            <div id="slots" class="slots"></div>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="patient-select">Patient</label>
+              <select id="patient-select" required>
+                <option value="">Select a patient</option>
+              </select>
+            </div>
+            <div class="field align-end">
+              <button type="button" id="toggle-new-patient" class="btn btn-ghost">＋ New patient</button>
+            </div>
+          </div>
+
+          <div id="new-patient" class="new-patient hidden">
+            <div class="grid three">
+              <div class="field">
+                <label for="np-name">Patient name</label>
+                <input id="np-name" type="text" placeholder="e.g. Jane Doe" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="np-phone">Phone</label>
+                <input id="np-phone" type="text" placeholder="+254700000000" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="np-email">Email</label>
+                <input id="np-email" type="email" placeholder="jane@example.com" autocomplete="off" />
+              </div>
+            </div>
+            <button type="button" id="create-patient" class="btn btn-secondary">Register patient</button>
+          </div>
+
+          <div class="field">
+            <label for="notes-input">Notes (optional)</label>
+            <textarea id="notes-input" rows="2" placeholder="Reason for visit, remarks…"></textarea>
+          </div>
+
+          <div class="actions">
+            <button type="submit" id="submit-booking" class="btn btn-primary">Book appointment</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= Appointments view ================= -->
+    <section id="view-appointments" class="view hidden">
+      <div class="panel">
+        <h2>My appointments</h2>
+        <div class="inline-field">
+          <label for="my-patient">Patient</label>
+          <select id="my-patient">
+            <option value="">Select a patient</option>
+          </select>
+          <button type="button" id="load-appointments" class="btn btn-secondary">Load</button>
+        </div>
+        <div id="appointments-list" class="appointments"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= Reschedule modal ================= -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h3 id="modal-title">Pick a new slot</h3>
+      <p class="muted" id="modal-sub"></p>
+      <div id="modal-slots" class="slots"></div>
+      <button type="button" id="modal-close" class="btn btn-ghost">Close</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

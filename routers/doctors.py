@@ -6,9 +6,14 @@ from sqlalchemy.orm import Session
 from availability import generate_slots_for_doctor
 from database import get_db
 from models import Doctor
-from schemas import AvailabilityResponse
+from schemas import AvailabilityResponse, DoctorResponse
 
 router = APIRouter()
+
+
+@router.get("/doctors", response_model=list[DoctorResponse])
+def list_doctors(db: Session = Depends(get_db)):
+    return db.query(Doctor).order_by(Doctor.full_name).all()
 
 
 @router.get("/doctors/{doctor_id}/availability", response_model=AvailabilityResponse)
